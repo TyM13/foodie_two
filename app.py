@@ -9,7 +9,12 @@ app = Flask(__name__)
 
 @app.get('/api/client')
 def client_info():
-    results = dbhelper.execute_statment('CALL get_client(?)', request.args.get['client_id'])
+    invalid = check_endpoint_info(request.args, ['client_id'])
+    if(invalid != None):
+        return make_response(json.dumps(invalid, default=str), 400)
+
+    results = dbhelper.run_statment('CALL get_client(?)',
+    [request.args.get('client_id')])
     if(type(results) == list):
         return make_response(json.dumps(results, default=str), 200)
     else:
