@@ -30,11 +30,11 @@ CREATE TABLE `client` (
   `last_name` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
   `image_url` varchar(300) COLLATE utf8mb4_bin DEFAULT NULL,
   `username` varchar(100) COLLATE utf8mb4_bin NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `client_un` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (1,'2022-10-20','test@hotmail.ca','first_name','last_name','test_image','test_username','test_name','test_pass'),(2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass');
+INSERT INTO `client` VALUES (1,'2022-10-20','test@hotmail.ca','first_name','last_name','test_image','test_username','test_name','test_pass'),(2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(10,'2022-10-20','three@hotmail.ca','fnThree','lnThree','urlthree','userThree',NULL,'passthree'),(12,'2022-10-22','duck','duck','duck','duck','duck',NULL,'duck');
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +63,7 @@ CREATE TABLE `client_session` (
   UNIQUE KEY `client_session_un` (`token`),
   KEY `client_session_FK` (`client_id`),
   CONSTRAINT `client_session_FK` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,10 +241,46 @@ UNLOCK TABLES;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client`(client_id_input int unsigned)
 begin
-	select c.created_at, email, first_name, last_name, c.id, image_url, username
+	select c.created_at, convert(email using utf8), convert(first_name using utf8), convert(last_name using utf8), c.id,
+	convert (image_url using utf8), convert(username using utf8)
 	from client c inner join client_session cs on cs.id  = c.id 
 	where cs.id = client_id_input;
 	commit;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `post_client` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `post_client`(client_email_input varchar(100), client_first_name_input varchar(50), client_last_name_input varchar(50),
+client_image_url_input varchar(300), client_username_input varchar(100), client_password_input varchar(50))
+    MODIFIES SQL DATA
+begin
+	
+insert into client (email, first_name, last_name, image_url, username, password) values 
+(client_email_input, client_first_name_input, client_last_name_input, 
+client_image_url_input, client_username_input, client_password_input);
+#insert session for client
+
+insert into client_session (client_id, token)
+values (last_insert_id(), token);
+
+select (last_insert_id() , token_input)
+from client_session cs
+where email=client_email_input and password=client_password_input;
+
+
+commit;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -282,4 +318,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-20 19:21:57
+-- Dump completed on 2022-10-22  9:59:19
