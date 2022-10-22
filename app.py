@@ -28,7 +28,7 @@ def client_post():
 #client login
 
 
-@app.post('/api/client_login')
+@app.post('/api/client-login')
 def client_login():
     invalid = check_endpoint_info(request.json, ['email','password'])
     if(invalid != None):
