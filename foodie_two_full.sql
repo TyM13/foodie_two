@@ -276,8 +276,7 @@ insert into client_session (client_id, token)
 values (last_insert_id(), token);
 
 select (last_insert_id() , token_input)
-from client_session cs
-where email=client_email_input and password=client_password_input;
+from client_session cs;
 
 
 commit;
@@ -318,4 +317,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-22  9:59:19
+-- Dump completed on 2022-10-22 10:01:44
