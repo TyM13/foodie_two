@@ -1,3 +1,4 @@
+from unittest import result
 from apihelper import check_endpoint_info
 import dbhelper
 from flask import Flask, request, make_response
@@ -33,8 +34,8 @@ def client_post():
         return make_response(json.dumps(invalid, default=str), 400)
 
     token = uuid4().hex
-    results = dbhelper.run_statment('CALL post_client(?,?,?,?,?,?,?,?)', [request.json.get('client_email'), request.json.get('client_fn'), request.json.get('client_ln'),
-    request.json.get('client_img'), request.json.get('client_username'), request.json.get('client_password'), token])
+    results = dbhelper.run_statment('CALL post_client(?,?,?,?,?,?)', [request.json.get('client_email'), request.json.get('client_fn'), request.json.get('client_ln'),
+    request.json.get('client_img'), request.json.get('client_username'), request.json.get('client_password')])
     if(type(results) == list):
         return make_response(json.dumps(token, default=str), 200)
     else:
@@ -42,8 +43,27 @@ def client_post():
 
 
 
+#---------------------------------------------------------------------------------#
 
 
+
+@app.post('/api/client_login')
+def client_login():
+    invalid = check_endpoint_info(request.json, ['client_email','client_password'])
+    if(invalid != None):
+        return make_response(json.dumps(invalid, default=str), 400)    
+
+    token = uuid4().hex
+    results = ('CALL client_login(?,?,?)',
+    [request.json.get('client_email'), request.json.get('client_password'), token])
+    
+    if(type(results) == list and results[0][0] == 1):
+        return make_response(json.dumps(token, default=str), 200)
+    elif(type(results) == list and results[0][0] == 0):
+        return make_response(json.dumps("Bad login attempt"), 400)
+    else:
+        return make_response(json.dumps("Sorry there has been an error"), 500) 
+    
 
 
 if(dbcreds.production_mode == True):
