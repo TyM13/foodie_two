@@ -63,7 +63,7 @@ CREATE TABLE `client_session` (
   UNIQUE KEY `client_session_un` (`token`),
   KEY `client_session_FK` (`client_id`),
   CONSTRAINT `client_session_FK` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,6 @@ CREATE TABLE `client_session` (
 
 LOCK TABLES `client_session` WRITE;
 /*!40000 ALTER TABLE `client_session` DISABLE KEYS */;
-INSERT INTO `client_session` VALUES (1,1,'asdf','2022-10-20'),(2,2,'zxcv','2022-10-20');
 /*!40000 ALTER TABLE `client_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,7 +185,7 @@ CREATE TABLE `restaurant` (
   UNIQUE KEY `restaurant_un` (`email`),
   UNIQUE KEY `restaurant_un_num` (`phone_number`),
   CONSTRAINT `restaurant_check` CHECK (`city` = ' toronto' or `city` = 'calgary' or `city` = 'vancouver')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -195,6 +194,7 @@ CREATE TABLE `restaurant` (
 
 LOCK TABLES `restaurant` WRITE;
 /*!40000 ALTER TABLE `restaurant` DISABLE KEYS */;
+INSERT INTO `restaurant` VALUES (1,'restaurant@hotmail.ca','restaurant test','retaurant address','555-555-5555','restaurant bio','calgary','restaurant url','restaurant banner ','pass','2022-10-22');
 /*!40000 ALTER TABLE `restaurant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,7 +214,7 @@ CREATE TABLE `restaurant_session` (
   UNIQUE KEY `restaurant_session_un` (`token`),
   KEY `restaurant_session_FK` (`restaurant_id`),
   CONSTRAINT `restaurant_session_FK` FOREIGN KEY (`id`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -223,6 +223,7 @@ CREATE TABLE `restaurant_session` (
 
 LOCK TABLES `restaurant_session` WRITE;
 /*!40000 ALTER TABLE `restaurant_session` DISABLE KEYS */;
+INSERT INTO `restaurant_session` VALUES (1,1,'test','2022-10-22');
 /*!40000 ALTER TABLE `restaurant_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -244,7 +245,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `client_login`(client_email_input va
 begin
 insert into client_session (client_id, token)
 
-select id, client_session_token_input from client where email=client_email_input and password=client_password_input;
+select c.id, client_session_token_input from client c where email=client_email_input and password=client_password_input;
 select row_count();
 	commit;
 END ;;
@@ -267,7 +268,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client`(client_id_input int uns
 begin
 	select c.created_at, convert(email using utf8), convert(first_name using utf8), convert(last_name using utf8), c.id,
 	convert (image_url using utf8), convert(username using utf8)
+	
 	from client c inner join client_session cs on cs.id  = c.id 
+	
 	where cs.id = client_id_input;
 	commit;
 END ;;
@@ -290,7 +293,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_restaurant`(restaurant_id_input
 begin
 	select convert(email using utf8), convert(name using utf8), convert(address using utf8), convert(phone_number using utf8), convert(bio using utf8),
 	convert(city using utf8), convert(profile_url using utf8), convert(banner_url using utf8), rs.restaurant_id
-	 from restaurant r inner join restaurant_session rs on rs.id=r.id; 
+	
+	 from restaurant r inner join restaurant_session rs on rs.id=r.id
+	 
+	 where rs.id =restaurant_id_input;
 	
 	commit;
 END ;;
@@ -384,4 +390,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-22 16:07:33
+-- Dump completed on 2022-10-22 17:14:09
