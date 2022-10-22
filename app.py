@@ -52,10 +52,10 @@ def client_login():
 @app.get('/api/restaurant')
 def get_specific_restaurant():
     invalid = check_endpoint_info(request.args, ['restaurant_id'])
-    if(invalid == None):
+    if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
-    results = dbhelper.run_statment('CALL', [request.args.get('restaurant_id')])
+    results = dbhelper.run_statment('CALL get_restaurant(?)', [request.args.get('restaurant_id')])
     if(type(results) == list):
         return make_response(json.dumps(results, default=str), 200)
     else:
