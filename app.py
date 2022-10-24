@@ -36,7 +36,7 @@ def client_login():
         return make_response(json.dumps(invalid, default=str), 400)    
 
     token = uuid4().hex
-    results = ('CALL client_login(?,?,?)',
+    results = dbhelper.run_statment('CALL client_login(?,?,?)',
     [request.json.get('email'), request.json.get('password'), token])
     
     if(type(results) == list and results[0][0] == 1):
