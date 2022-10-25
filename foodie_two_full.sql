@@ -34,7 +34,7 @@ CREATE TABLE `client` (
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `client_un` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (1,'2022-10-20','test@hotmail.ca','first_name','last_name','test_image','test_username','test_name','test_pass'),(2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(10,'2022-10-20','three@hotmail.ca','fnThree','lnThree','urlthree','userThree',NULL,'passthree'),(30,'2022-10-22','client_email','client_fn','client_ln','client_img','client_username',NULL,'client_password');
+INSERT INTO `client` VALUES (1,'2022-10-20','test@hotmail.ca','first_name','last_name','test_image','test_username','test_name','test_pass'),(2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(32,'2022-10-25','client_email','client_fn','client_ln','client_img','client_username',NULL,'client_password');
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +63,7 @@ CREATE TABLE `client_session` (
   UNIQUE KEY `client_session_un` (`token`),
   KEY `client_session_FK` (`client_id`),
   CONSTRAINT `client_session_FK` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -240,13 +240,13 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `client_login`(client_email_input varchar(100), client_password_input varchar(50), client_session_token_input varchar(200))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `client_login`(client_email_input varchar(100), client_password_input varchar(50),
+client_session_token_input varchar(200))
     MODIFIES SQL DATA
 begin
 insert into client_session (client_id, token)
 
 select c.id, client_session_token_input from client c where email=client_email_input and password=client_password_input;
-select row_count();
 	commit;
 END ;;
 DELIMITER ;
@@ -390,4 +390,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-22 17:14:09
+-- Dump completed on 2022-10-25 16:01:26

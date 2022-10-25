@@ -6,6 +6,7 @@ import dbcreds
 from uuid import uuid4
 import client.client
 import restaurant.restaurant
+import client_login.client_login
 
 
 app = Flask(__name__)
@@ -20,31 +21,28 @@ def client_info():
 
 @app.post('/api/client')
 def client_post():
-    return client.client.post
+    return client.client.post()
+
+
+
 
 
 
 
 #---------------------------------------------------------------------------------#
 #client login
-
+# NEED HELP WITH UNDERSTANDING ERROR W/ TEACHER
 
 @app.post('/api/client-login')
-def client_login():
-    invalid = check_endpoint_info(request.json, ['email','password'])
-    if(invalid != None):
-        return make_response(json.dumps(invalid, default=str), 400)    
+def login_client():
+    return client_login.client_login.post()
 
-    token = uuid4().hex
-    results = dbhelper.run_statment('CALL client_login(?,?,?)',
-    [request.json.get('email'), request.json.get('password'), token])
-    
-    if(type(results) == list and results[0][0] == 1):
-        return make_response(json.dumps(results, default=str), 200)
-    elif(type(results) == list and results[0][0] == 0):
-        return make_response(json.dumps("Bad login attempt"), 400)
-    else:
-        return make_response(json.dumps("Sorry there has been an error"), 500) 
+
+
+@app.delete('/api')
+def delete_client():
+    invalid = check_endpoint_info(request.json, [''])
+
     
 
 #---------------------------------------------------------------------------------#
@@ -52,7 +50,7 @@ def client_login():
 
 @app.get('/api/restaurant')
 def get_specific_restaurant():
-    return restaurant.restaurant.get
+    return restaurant.restaurant.get()
 
 
 
