@@ -8,7 +8,7 @@ from uuid import uuid4
 
 
 
-# POTENTIAL ERROR?
+# Client Login
 
 def post():
     invalid = check_endpoint_info(request.json, ['email','password'])
@@ -19,9 +19,13 @@ def post():
     results = dbhelper.run_statment('CALL client_login(?,?,?)',
     [request.json.get('email'), request.json.get('password'), token])
     
-    if(type(results) == list and results[0][0] == 1):
+    if(type(results) == list and len(results[0]) == 2):
         return make_response(json.dumps(results, default=str), 200)
     elif(type(results) == list and results[0][0] == 0):
         return make_response(json.dumps("Bad login attempt"), 400)
     else:
         return make_response(json.dumps("Sorry there has been an error"), 500) 
+
+
+# ------------------------------------------------------------------
+# client-Login-Delete

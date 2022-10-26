@@ -1,3 +1,5 @@
+from email import header
+from jinja2 import Undefined
 from apihelper import check_endpoint_info
 import dbhelper
 from flask import Flask, request, make_response
@@ -22,6 +24,40 @@ def client_info():
 @app.post('/api/client')
 def client_post():
     return client.client.post()
+
+
+@app.patch('/api/client')
+def client_patch():
+    invalid = check_endpoint_info(request.json, ['email'], ['first_name'], ['last_name'],
+    ['image_url'], ['username'], ['password'], request.headers, ['token'])
+    if(invalid == None):
+        return make_response(json.dumps(invalid, default=str), 400)
+
+    token = uuid4.hex()
+    results = dbhelper.run_statment('CALL patch_client(?,?,?,?,?,?)',
+    [request.json.get('email'), request.json.get('first_name'), request.json.get('last_name'),
+    request.json.get('image_url'), request.json.get('username'), request.json.get('password'), request.headers(token)])
+    if(type(results) == list):
+        return make_response(json.dumps(results, default=str), 200)
+    else:
+        return make_response(json.dumps(results, default=str), 500)
+
+
+
+@app.delete('/api/client')
+def client_delete():
+    invalid = check_endpoint_info(request.json, ['password']
+    )
+    if(invalid == None):
+        return make_response(json.dumps(invalid, default=str), 400)
+
+    token = uuid4.hex()
+    results = dbhelper.run_statment('CALL delete_client(?,?)', request.json.get('password'))
+    if(type(results) == list):
+        return make_response(json.dumps(results, default=str), 200)
+    else:
+        return make_response(json.dumps(results, default=str), 500)
+
 
 
 
@@ -68,3 +104,11 @@ else:
     CORS(app)
     print("Running in Testing Mode!")
     app.run(debug=True)
+
+
+
+
+
+
+
+

@@ -6,7 +6,7 @@ import dbcreds
 from uuid import uuid4
 
 #---------------------------------------------------------------------------------#
-#client info
+#client-info-get
 
 def get():
     invalid = check_endpoint_info(request.args, ['client_id'])
@@ -23,7 +23,7 @@ def get():
 
 
 #---------------------------------------------------------------------------------#
-#client signup
+#client-signup-post
 
 def post():
     invalid = check_endpoint_info(request.json, ['email', 'first_name', 'last_name',
@@ -38,3 +38,6 @@ def post():
         return make_response(json.dumps(results, default=str), 200)
     else:
         return make_response(json.dumps(results, default=str), 500)
+
+#---------------------------------------------------------------------------------#
+
