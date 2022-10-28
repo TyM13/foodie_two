@@ -43,13 +43,13 @@ def client_patch():
 
 @app.delete('/api/client')
 def client_delete():
-    invalid = check_endpoint_info(request.json and request.headers,['password', ['token']])
+    invalid = check_endpoint_info(request.headers, ['token'])
     if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
-    # uuid4().hex
-    results = dbhelper.run_statment('CALL delete_client(?,?)', request.json['password', request.headers['token']])
-    if(type(results) == list):
+
+    results = dbhelper.run_statment('CALL delete_client(?,?)', [request.json['password'], request.headers['token']])
+    if(type(results) == list and len(results[0]) == 1):
         return make_response(json.dumps(results, default=str), 200)
     else:
         return make_response(json.dumps(results, default=str), 500)
