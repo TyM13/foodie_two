@@ -7,7 +7,8 @@ from uuid import uuid4
 import client.client
 import restaurant.restaurant
 import client_login.client_login
-
+import restaurants.restaurants
+import menu.menu
 
 app = Flask(__name__)
 
@@ -66,7 +67,7 @@ def client_delete():
 
 
 
-#---------------------------------------------------------------------------------#
+#--------------------------------CLIENT LOGIN-------------------------------------------------#
 #client login
 
 
@@ -98,8 +99,28 @@ def restaurant_post():
 
 
 
-#---------------------------------------------------------------------------------#
+#----------------------------------RESTAURANTS-----------------------------------------------#
+#get restaurants
 
+@app.get('/api/restaurants')
+def restaurants_get():
+    return restaurants.restaurants.get()
+
+
+
+#----------------------------------MENU-----------------------------------------------#
+#get specific menu
+
+
+@app.get('/api/menu')
+def menu_get():
+    return menu.menu.get()
+
+# post menu
+
+@app.post('/api/menu')
+def menu_post():
+    return menu.menu.post()
 
 
 
