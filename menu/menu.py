@@ -22,10 +22,11 @@ def get():
 
 def post():
     invalid = check_endpoint_info(request.headers, ['token'])
-    if(invalid != None):
-        return make_response(json.dumps(invalid, default=str), 400)
+    invalid_info = check_endpoint_info(request.json, ['description','image_url','name','price'])
+    if(invalid != None or invalid_info != None):
+        return make_response(json.dumps(invalid, invalid_info, default=str), 400)
 
-    results = dbhelper.run_statment('CALL post_menu',
+    results = dbhelper.run_statment('CALL post_menu(?,?,?,?,?)',
     [request.json['description'], request.json['image_url'], request.json['name'], request.json['price'], request.headers['token']])
     if(type(results) == list):
         return make_response(json.dumps(results, default=str), 200)

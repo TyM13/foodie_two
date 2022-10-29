@@ -34,7 +34,7 @@ CREATE TABLE `client` (
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `client_un` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `client` (
 
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(49,'2022-10-28','client_email','client_fn','client_ln','client_img','client_username',NULL,'client_password');
+INSERT INTO `client` VALUES (2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(53,'2022-10-29','client_email','client_fn','client_ln','client_img','client_username',NULL,'client_password');
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +63,7 @@ CREATE TABLE `client_session` (
   UNIQUE KEY `client_session_un` (`token`),
   KEY `client_session_FK` (`client_id`),
   CONSTRAINT `client_session_FK` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `client_session` (
 
 LOCK TABLES `client_session` WRITE;
 /*!40000 ALTER TABLE `client_session` DISABLE KEYS */;
-INSERT INTO `client_session` VALUES (101,49,'bdec9c4c0c1f42759c0f406149c3a65a','2022-10-28'),(102,49,'d50fcb316dae42e5a09c8bb282399de7','2022-10-28');
+INSERT INTO `client_session` VALUES (112,53,'75fb963c439844b4802ae089a54d4f48','2022-10-29');
 /*!40000 ALTER TABLE `client_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `menu_item` (
   PRIMARY KEY (`id`),
   KEY `menu_item_FK` (`restaurant_id`),
   CONSTRAINT `menu_item_FK` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `menu_item` (
 
 LOCK TABLES `menu_item` WRITE;
 /*!40000 ALTER TABLE `menu_item` DISABLE KEYS */;
-INSERT INTO `menu_item` VALUES (1,'test_desc','test_img','test_name',20,15,'2022-10-29'),(8,'rtes','rtes','rtes',20,15,'2022-10-29');
+INSERT INTO `menu_item` VALUES (16,'testr','testr','testr',50,14,'2022-10-29'),(17,'testr','testr','testr',50,14,'2022-10-29');
 /*!40000 ALTER TABLE `menu_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +225,7 @@ CREATE TABLE `restaurant_session` (
 
 LOCK TABLES `restaurant_session` WRITE;
 /*!40000 ALTER TABLE `restaurant_session` DISABLE KEYS */;
-INSERT INTO `restaurant_session` VALUES (12,14,'bdaf0263a0944bdaa725299ee4def96a','2022-10-28'),(13,15,'tes','2022-10-28'),(17,15,'token','2022-10-29');
+INSERT INTO `restaurant_session` VALUES (12,14,'bdaf0263a0944bdaa725299ee4def96a','2022-10-28');
 /*!40000 ALTER TABLE `restaurant_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,14 +297,14 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client`(client_session_client_id_input int unsigned)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client`(client_id_input int unsigned)
 begin
 	select  convert(email using utf8), convert(first_name using utf8), convert(last_name using utf8), 
 	convert (image_url using utf8), convert(username using utf8),c.created_at, c.id
 	
-	from client c inner join client_session cs on c.id=cs.client_id
+	from client c 
 	
-	where c.id = client_session_client_id_input;
+	where c.id = client_id_input;
 	commit;
 END ;;
 DELIMITER ;
@@ -461,21 +461,22 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `post_menu`(menu_item_description_input varchar(255), menu_item_image_url_input varchar(200),
-menu_item_name_input varchar(100), menu_item_price_input int unsigned, menu_item_restaurant_id_input int unsigned)
+menu_item_name_input varchar(100), menu_item_price_input int unsigned, restaurant_session_token_input varchar(100))
     MODIFIES SQL DATA
 begin
-	insert into menu_item (desciption, image_url, name, price, restaurant_id)
-	values (menu_item_description_input, menu_item_image_url_input, menu_item_name_input, menu_item_price_input, menu_item_restaurant_id_input);
 
-insert into restaurant_session (restaurant_id, token)
-values (last_insert_id(), restaurant_session_token_input);
+insert into menu_item (restaurant_id, desciption, image_url, name, price)
+select restaurant_id, menu_item_description_input, menu_item_image_url_input,
+menu_item_name_input, menu_item_price_input from restaurant_session where restaurant_session.token=restaurant_session_token_input;
+
 	
 	select row_count();
 	
 	commit;
 end
 
-#need to go over and figure out ;;
+#need to go over and figure out
+#The token should be sent by the restaurant, which will give you access to their id ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -578,4 +579,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-29 10:49:37
+-- Dump completed on 2022-10-29 15:58:01

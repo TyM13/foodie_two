@@ -10,6 +10,9 @@ import client_login.client_login
 import restaurants.restaurants
 import menu.menu
 
+
+#change conditionals to be correct
+
 app = Flask(__name__)
 
 
@@ -47,8 +50,8 @@ def client_delete():
     invalid = check_endpoint_info(request.headers, ['token'])
     invalid_password = check_endpoint_info(request.json, ['password'])
     #edit below for both
-    if(invalid != None):
-        return make_response(json.dumps(invalid, default=str), 400)
+    if(invalid != None or invalid_password != None):
+        return make_response(json.dumps(invalid, invalid_password, default=str), 400)
 
 
 
@@ -77,6 +80,7 @@ def login_client():
 
 
 
+# client-login Delete
 @app.delete('/api/client-login')
 def delete_client():
     invalid = check_endpoint_info(request.json, [''])
