@@ -44,11 +44,16 @@ def client_patch():
 @app.delete('/api/client')
 def client_delete():
     invalid = check_endpoint_info(request.headers, ['token'])
+    invalid_password = check_endpoint_info(request.json, ['password'])
+    #edit below for both
     if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
 
+
+
     results = dbhelper.run_statment('CALL delete_client(?,?)', [request.json['password'], request.headers['token']])
+    #need statment in if
     if(type(results) == list and len(results[0]) == 1):
         return make_response(json.dumps(results, default=str), 200)
     else:
@@ -71,7 +76,7 @@ def login_client():
 
 
 
-@app.delete('/api')
+@app.delete('/api/client-login')
 def delete_client():
     invalid = check_endpoint_info(request.json, [''])
 
@@ -89,6 +94,15 @@ def get_specific_restaurant():
 
 #---------------------------------------------------------------------------------#
 #restaurant signup
+
+
+
+
+@app.post('/api/restaurant')
+def restaurant_post():
+    return restaurant.restaurant.post()
+
+
 
 
 if(dbcreds.production_mode == True):
