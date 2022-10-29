@@ -82,7 +82,7 @@ def delete_client():
 
     
 
-#---------------------------------------------------------------------------------#
+#------------------------------RESTAURANT-----------------------------------------------#
 #restaurant specific info
 
 @app.get('/api/restaurant')
@@ -90,17 +90,16 @@ def get_specific_restaurant():
     return restaurant.restaurant.get()
 
 
-
-
-#---------------------------------------------------------------------------------#
 #restaurant signup
-
-
-
 
 @app.post('/api/restaurant')
 def restaurant_post():
     return restaurant.restaurant.post()
+
+
+
+#---------------------------------------------------------------------------------#
+
 
 
 
