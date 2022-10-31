@@ -9,6 +9,7 @@ import restaurant.restaurant
 import client_login.client_login
 import restaurants.restaurants
 import menu.menu
+import restaurant_login.restaurant_login
 
 
 #change conditionals to be correct
@@ -30,8 +31,9 @@ def client_post():
 
 @app.patch('/api/client')
 def client_patch():
-    invalid = check_endpoint_info(request.json['email', 'first_name', 'last_name',
-    'image_url', 'username', 'password', request.headers['token']])
+    invalid = check_endpoint_info([request.headers['token']])
+    invalid_token = check_endpoint_info(request.json['email', 'first_name', 'last_name',
+    'image_url', 'username', 'password'])
     if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
@@ -47,21 +49,7 @@ def client_patch():
 
 @app.delete('/api/client')
 def client_delete():
-    invalid = check_endpoint_info(request.headers, ['token'])
-    invalid_password = check_endpoint_info(request.json, ['password'])
-    #edit below for both
-    if(invalid != None or invalid_password != None):
-        return make_response(json.dumps(invalid, invalid_password, default=str), 400)
-
-
-
-
-    results = dbhelper.run_statment('CALL delete_client(?,?)', [request.json['password'], request.headers['token']])
-    #need statment in if
-    if(type(results) == list and len(results[0]) == 1):
-        return make_response(json.dumps(results, default=str), 200)
-    else:
-        return make_response(json.dumps(results, default=str), 500)
+    return client.client.delete()
 
 
 
@@ -80,12 +68,31 @@ def login_client():
 
 
 
-# client-login Delete
+# client-login Delete  ?????
 @app.delete('/api/client-login')
 def delete_client():
-    invalid = check_endpoint_info(request.json, [''])
-
+    invalid_headers = check_endpoint_info(request.headers, ['token'])
+    if(invalid_headers != None):
+        return make_response(json.dumps(invalid_headers, default=str), 400)
     
+    results = dbhelper.run_statment('CALL client_login_delete()', [request.headers['token']])
+    if(type(results) == list):
+        return make_response(json.dumps(results, default=str), 200)
+    else:
+        return make_response(json.dumps(results, default=str), 500)
+
+
+
+
+#--------------------------------RESTAURANT-LOGIN-------------------------------------------------#
+#RESTAURANT LOGIN
+
+@app.post('/api/restaurant-login')
+def login_restaurant():
+    return restaurant_login.restaurant_login.post()
+
+
+        
 
 #------------------------------RESTAURANT-----------------------------------------------#
 #restaurant specific info
