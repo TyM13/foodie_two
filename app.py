@@ -1,4 +1,4 @@
-from apihelper import check_endpoint_info
+from apihelper import check_endpoint_info, fill_optional_data
 import dbhelper
 from flask import Flask, request, make_response
 import json
@@ -31,15 +31,18 @@ def client_post():
 
 @app.patch('/api/client')
 def client_patch():
-    invalid = check_endpoint_info([request.headers['token']])
-    invalid_token = check_endpoint_info(request.json['email', 'first_name', 'last_name',
-    'image_url', 'username', 'password'])
+    invalid = check_endpoint_info(request.headers, ['token']) 
     if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
+
+    results = dbhelper.run_statment('CALL get_client_token(?)', [request.headers.get('token')])
+    if(type(results) != list):
+        return make_response(json.dumps(results), 400)
     
-    results = dbhelper.run_statment('CALL patch_client(?,?,?,?,?,?)',
-    request.json['email', 'first_name', 'last_name','image_url', 'username', 'password'], request.headers['token'])
+    results = fill_optional_data(request.json, results[0] ['email', 'first_name', 'last_name','image_url', 'username', 'password'])
+    results = dbhelper.run_statment('CALL patch_client(?,?,?,?,?,?,?)',
+    [request.headers['token'], results['email'], results['first_name'], results['last_name'], results['image_url'], results['username'], results['password']])
     if(type(results) == list):
         return make_response(json.dumps(results, default=str), 200)
     else:
@@ -68,18 +71,10 @@ def login_client():
 
 
 
-# client-login Delete  ?????
+# client-login Delete 
 @app.delete('/api/client-login')
 def delete_client():
-    invalid_headers = check_endpoint_info(request.headers, ['token'])
-    if(invalid_headers != None):
-        return make_response(json.dumps(invalid_headers, default=str), 400)
-    
-    results = dbhelper.run_statment('CALL client_login_delete()', [request.headers['token']])
-    if(type(results) == list):
-        return make_response(json.dumps(results, default=str), 200)
-    else:
-        return make_response(json.dumps(results, default=str), 500)
+    return client_login.client_login.delete()
 
 
 

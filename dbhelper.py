@@ -49,39 +49,39 @@ def execute_statment(cursor, statement, list_of_args=[]):
         return str(error)
 
 
-#returns a list of tuples if it connects if it fails it will return a string "conntection error"
-def run_statment(statment, list_of_args=[]):
-    cursor = connect_db()
-    if(cursor == None):
-        return "conntection error"
-    results = execute_statment(cursor, statment, list_of_args)
-    close_connect(cursor)
-    return results
-
-
-
-
-
-
-#     #returns a list of tuples if it connects if it fails it will return a string "conntection error"
+# #returns a list of tuples if it connects if it fails it will return a string "conntection error"
 # def run_statment(statment, list_of_args=[]):
 #     cursor = connect_db()
 #     if(cursor == None):
 #         return "conntection error"
 #     results = execute_statment(cursor, statment, list_of_args)
-#     results = make_dictionary(results, cursor)
 #     close_connect(cursor)
 #     return results
 
 
-# def make_dictionary(results, cursor):
-# # get the columns from the statment the cursor executed
-#     columns = [i[0] for i in cursor.description]
-# # start an empyty array for the up coming dictionaru rows
-#     new_results = []
-# #loop through each row in the original results
-#     for row in results:
-# #append a newly zipped together column name with row value
-#         new_results.append(dict(zip(columns, row)))
-# # returns the new_results
-#     return new_results
+
+
+
+
+    #returns a list of tuples if it connects if it fails it will return a string "conntection error"
+def run_statment(statment, list_of_args=[]):
+    cursor = connect_db()
+    if(cursor == None):
+        return "conntection error"
+    results = execute_statment(cursor, statment, list_of_args)
+    results = make_dictionary(results, cursor)
+    close_connect(cursor)
+    return results
+
+
+def make_dictionary(results, cursor):
+# get the columns from the statment the cursor executed
+    columns = [i[0] for i in cursor.description]
+# start an empyty array for the up coming dictionaru rows
+    new_results = []
+#loop through each row in the original results
+    for row in results:
+#append a newly zipped together column name with row value
+        new_results.append(dict(zip(columns, row)))
+# returns the new_results
+    return new_results

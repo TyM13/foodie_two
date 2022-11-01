@@ -35,4 +35,15 @@ def post():
 
 
 # ------------------------------------------------------------------
-# client-Login-Delete
+# client-Login-Delete(logout)
+def delete():
+    invalid_headers = check_endpoint_info(request.headers, ['token'])
+    if(invalid_headers != None):
+        return make_response(json.dumps(invalid_headers, default=str), 400)
+    
+    results = dbhelper.run_statment('CALL client_login_delete(?)', [request.headers['token']])
+    if(type(results) == list):
+        return make_response(json.dumps(results, default=str), 200)
+    else:
+        return make_response(json.dumps(results, default=str), 500)
+
