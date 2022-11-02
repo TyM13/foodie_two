@@ -82,7 +82,9 @@ def get_specific_restaurant():
 def restaurant_post():
     return restaurant.restaurant.post()
 
-#need patch and delete
+@app.patch('/api/restaurant')
+def restaurant_patch():
+    return restaurant.restaurant.patch()
 
 
 #----------------------------------RESTAURANTS-----------------------------------------------#

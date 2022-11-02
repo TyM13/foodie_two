@@ -59,22 +59,38 @@ def delete():
     invalid = check_endpoint_info(request.headers, ['token'])
 # checks the sent data request.json and the expected data password, sets as variable invalid_password
     invalid_password = check_endpoint_info(request.json, ['password'])
-# if invalid and invalid password are not equal to none it will return a 400 error
     if(invalid != None or invalid_password != None):
         return make_response(json.dumps(invalid, invalid_password, default=str), 400)
 
-
-
+    salt = uuid4().hex
 # runs the statment CALL delete_client and sends 2 arguement 1 being the password and the token as a header that was randomly generated and stores it as the variable results
-    results = dbhelper.run_statment('CALL delete_client(?,?)', [request.json['password'], request.headers['token']])
+    results = dbhelper.run_statment('CALL delete_client(?,?,?)', [request.json['password'], request.headers['token'], salt])
 # if results is equal to a list and tuple returned is 0 nothing has been deleted if it returns a  1 something was deleted,
 #  it will display a 200 message (success), and print the results of the procedure as json 
 # if it isn't it will display a 500 message (server error)
-    if(type(results) == list and (results[0][0]) == 1):
+    if(type(results) == list):
         return make_response(json.dumps(results, default=str), 200)
     else:
         return make_response(json.dumps(results, default=str), 500)
 
+
+ #original not sure how to do it with the hash and salt
+
+# def delete():
+#     invalid = check_endpoint_info(request.headers, ['token'])
+#     invalid_password = check_endpoint_info(request.json, ['password'])
+#     if(invalid == None or invalid_password == None):
+#         return make_response(json.dumps(invalid, invalid_password ,default=str), 400)
+
+
+#     results = dbhelper.run_statment('CALL delete_client(?,?)', [request.json.get('password'), request.headers['token']])
+#     if(type(results) == list):
+#         return make_response(json.dumps(results, default=str), 200)
+#     else:
+#         return make_response(json.dumps(results, default=str), 500)
+
+
+#---------------------------------------------------------------------------------#
 
 def patch():
 # checks the sent data request.headers and the expected data token, sets as variable invalid
