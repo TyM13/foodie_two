@@ -32,20 +32,11 @@ CREATE TABLE `client` (
   `username` varchar(100) COLLATE utf8mb4_bin NOT NULL,
   `name` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `salt` varchar(100) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `client_un` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client`
---
-
-LOCK TABLES `client` WRITE;
-/*!40000 ALTER TABLE `client` DISABLE KEYS */;
-INSERT INTO `client` VALUES (2,'2022-10-20','test@gmail.com','test_f_name','test_l_name','test_two_img','test_two_user','test_two_name','test_two_pass'),(56,'2022-10-30','client_email','client_fn','client_ln','client_img','client_username',NULL,'client_password'),(58,'2022-10-30','email','fn','ln','img','usr',NULL,'pw');
-/*!40000 ALTER TABLE `client` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `client_session`
@@ -63,18 +54,8 @@ CREATE TABLE `client_session` (
   UNIQUE KEY `client_session_un` (`token`),
   KEY `client_session_FK` (`client_id`),
   CONSTRAINT `client_session_FK` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client_session`
---
-
-LOCK TABLES `client_session` WRITE;
-/*!40000 ALTER TABLE `client_session` DISABLE KEYS */;
-INSERT INTO `client_session` VALUES (123,56,'10f80baefdc94b2a9d64b69653d33533','2022-10-30');
-/*!40000 ALTER TABLE `client_session` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `menu_item`
@@ -98,16 +79,6 @@ CREATE TABLE `menu_item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `menu_item`
---
-
-LOCK TABLES `menu_item` WRITE;
-/*!40000 ALTER TABLE `menu_item` DISABLE KEYS */;
-INSERT INTO `menu_item` VALUES (16,'testr','testr','testr',50,14,'2022-10-29'),(17,'testr','testr','testr',50,14,'2022-10-29');
-/*!40000 ALTER TABLE `menu_item` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `order`
 --
 
@@ -126,15 +97,6 @@ CREATE TABLE `order` (
   CONSTRAINT `order_FK1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order`
---
-
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `order_menu_item`
@@ -156,15 +118,6 @@ CREATE TABLE `order_menu_item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order_menu_item`
---
-
-LOCK TABLES `order_menu_item` WRITE;
-/*!40000 ALTER TABLE `order_menu_item` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_menu_item` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `restaurant`
 --
 
@@ -183,22 +136,13 @@ CREATE TABLE `restaurant` (
   `banner_url` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
   `password` varchar(50) COLLATE utf8mb4_bin NOT NULL,
   `created_at` date DEFAULT current_timestamp(),
+  `salt` varchar(100) COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `restaurant_un` (`email`),
   UNIQUE KEY `restaurant_un_num` (`phone_number`),
   CONSTRAINT `restaurant_check` CHECK (`city` = ' toronto' or `city` = 'calgary' or `city` = 'vancouver')
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `restaurant`
---
-
-LOCK TABLES `restaurant` WRITE;
-/*!40000 ALTER TABLE `restaurant` DISABLE KEYS */;
-INSERT INTO `restaurant` VALUES (14,'test','test','test','test','test','calgary','test','test','test','2022-10-28'),(15,'tes','tes','tes','tes','tes','calgary','tes','tes','tes','2022-10-28');
-/*!40000 ALTER TABLE `restaurant` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `restaurant_session`
@@ -216,18 +160,8 @@ CREATE TABLE `restaurant_session` (
   UNIQUE KEY `restaurant_session_un` (`token`),
   KEY `restaurant_session_FK` (`restaurant_id`),
   CONSTRAINT `restaurant_session_FK` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `restaurant_session`
---
-
-LOCK TABLES `restaurant_session` WRITE;
-/*!40000 ALTER TABLE `restaurant_session` DISABLE KEYS */;
-INSERT INTO `restaurant_session` VALUES (18,15,'bd3005b9c78a49498b198e006c3714ec','2022-10-30');
-/*!40000 ALTER TABLE `restaurant_session` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'foodie_two'
@@ -243,11 +177,11 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `client_login`(client_email_input varchar(100), client_password_input varchar(50),
-client_session_token_input varchar(200))
+client_session_token_input varchar(200), client_salt_input varchar(100))
     MODIFIES SQL DATA
 begin
 insert into client_session (client_id, token)
-select c.id, client_session_token_input from client c where email=client_email_input and password=client_password_input;
+select c.id, client_session_token_input from client c where email=client_email_input and password=PASSWORD(concat(client_password_input, (select salt from client where email=client_email_input)));
 
 select client_id , convert(cs.token using utf8) as token
 from client_session cs
@@ -273,13 +207,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `client_login_delete`(client_session
     MODIFIES SQL DATA
 begin
 
-delete from client_session where token=client_session_token_input;
+delete cs from client_session cs where token=client_session_token_input;
 
 select row_count();
 	
 	commit;
-end
-	#need help ;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -300,11 +233,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_client`(client_password_inpu
 begin
 	delete c from client c inner join client_session cs on cs.client_id=c.id where c.password=client_password_input and token=client_session_token_input;
 
-
-# client c inner join client_session on client_session=client.id 
-#token=token_input?
-
 select row_count();
+	
+	commit;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `delete_menu_item` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_menu_item`(restaurant_session_token_input varchar(100), order_menu_item_menu_id int unsigned)
+    MODIFIES SQL DATA
+begin
+	
+delete omi from order_menu_item omi inner join client_session on
 	
 	commit;
 END ;;
@@ -325,12 +277,38 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client`(client_id_input int unsigned)
 begin
-	select  convert(email using utf8), convert(first_name using utf8), convert(last_name using utf8), 
-	convert (image_url using utf8), convert(username using utf8),c.created_at, c.id
+	select  convert(email using utf8) as email, convert(first_name using utf8) as first_name, convert(last_name using utf8) as last_name, 
+	convert (image_url using utf8) as image_url, convert(username using utf8) as username,c.created_at, c.id
 	
 	from client c 
 	
 	where c.id = client_id_input;
+	commit;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_client_token` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_client_token`(client_session_token_input varchar(200))
+begin
+	select convert(c.email using utf8) as email, convert(c.first_name using utf8) as first_name, convert(c.last_name using utf8) as last_name,
+	convert (c.image_url using utf8) as image_url, convert(c.username using utf8) as username , convert(c.password using utf8) as password
+	
+	from client c inner join client_session cs on cs.client_id =c.id
+	
+	where cs.token=client_session_token_input;
+	
 	commit;
 END ;;
 DELIMITER ;
@@ -351,7 +329,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_menu`(menu_item_restaurant_id int unsigned)
 begin
 	
-	select convert(desciption using utf8), id, convert(image_url using utf8), convert(name using utf8), price
+	select convert(desciption using utf8) as desciption, id, convert(image_url using utf8) as image_url, convert(name using utf8) as name, price
 	from menu_item mi
 	where mi.restaurant_id=menu_item_restaurant_id;
 	
@@ -374,8 +352,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_restaurant`(restaurant_session_restaurant_id_input int unsigned)
 begin
-	select convert(email using utf8), convert(name using utf8), convert(address using utf8), convert(phone_number using utf8), convert(bio using utf8),
-	convert(city using utf8), convert(profile_url using utf8), convert(banner_url using utf8), r.created_at, rs.restaurant_id
+	select convert(email using utf8) as email, convert(name using utf8) as name, convert(address using utf8) as address, convert(phone_number using utf8) as phone_number, convert(bio using utf8) as bio,
+	convert(city using utf8) as city, convert(profile_url using utf8)as profile_url, convert(banner_url using utf8) as banner_url, r.created_at, rs.restaurant_id
 	
 	 from restaurant r inner join restaurant_session rs on r.id=rs.restaurant_id
 	 
@@ -401,8 +379,8 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_restaurants`()
 begin
 	
-	select convert(email using utf8), convert(name using utf8), convert(address using utf8), convert(phone_number using utf8), convert(bio using utf8),
-	convert(city using utf8), convert(profile_url using utf8), convert(banner_url using utf8), r.created_at
+	select convert(email using utf8) as email, convert(name using utf8) as name, convert(address using utf8) as address, convert(phone_number using utf8) as phone_number, convert(bio using utf8) as bio,
+	convert(city using utf8) as city, convert(profile_url using utf8) as profile_url, convert(banner_url using utf8) as banner_url, r.created_at
 	
 	from restaurant r;
 END ;;
@@ -425,17 +403,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `patch_client`(client_email_input va
 client_image_url_input varchar(300), client_username_input varchar(100),client_password_input varchar(50), client_session_token_input varchar(200))
     MODIFIES SQL DATA
 begin
-insert into client (email, first_name, last_name, image_url, username, password) values 
-(client_email_input, client_first_name_input, client_last_name_input, 
-client_image_url_input, client_username_input, client_password_input);
+update client c inner join client_session cs on c.id=cs.client_id 
+set c.email=client_email_input, c.first_name=client_first_name_input, c.last_name=client_last_name_input, 
+c.image_url=client_image_url_input, c.username=client_username_input, c.password=client_password_input
+where cs.token = client_session_token_input;
 	
-# client_session.client_id = client_session.token_input?
+
+select row_count() as columns_updated;
 commit;
-end
-
-
-#similar to login? insert into client.. info...
-#select client_session_token from client_session? ;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -452,19 +428,18 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `post_client`(client_email_input varchar(100), client_first_name_input varchar(50), client_last_name_input varchar(50),
-client_image_url_input varchar(300), client_username_input varchar(100), client_password_input varchar(50), client_session_token_input varchar(200))
+client_image_url_input varchar(300), client_username_input varchar(100), client_password_input varchar(50), client_session_token_input varchar(200), client_salt_input varchar(100))
     MODIFIES SQL DATA
 begin
 	
-insert into client (email, first_name, last_name, image_url, username, password) values 
+insert into client (email, first_name, last_name, image_url, username, password, salt) values 
 (client_email_input, client_first_name_input, client_last_name_input, 
-client_image_url_input, client_username_input, client_password_input);
-#insert session for client
+client_image_url_input, client_username_input, PASSWORD(concat(client_password_input, client_salt_input)), client_salt_input);
 
 insert into client_session (client_id, token)
 values (last_insert_id(), client_session_token_input);
 
-select cs.client_id, convert(cs.token using utf8)
+select cs.client_id, convert(cs.token using utf8) as token
 from client_session cs
 where cs.id=last_insert_id();
 
@@ -499,10 +474,7 @@ menu_item_name_input, menu_item_price_input from restaurant_session where restau
 	select row_count();
 	
 	commit;
-end
-
-#need to go over and figure out
-#The token should be sent by the restaurant, which will give you access to their id ;;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -521,17 +493,17 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `post_restaurant`(restaurant_email_input varchar(100), restaurant_name_input varchar(100),
 restaurant_address_input varchar(100), restaurant_phone_number_input varchar(20), restaurant_bio_input varchar(255),
 restaurant_city_input varchar(30), restaurant_profile_url_input varchar(200), restaurant_banner_url_input varchar(200),
-restaurant_password_input varchar(50), restaurant_session_token_input varchar(100))
+restaurant_password_input varchar(50), restaurant_session_token_input varchar(100), restaurant_salt_input varchar(100))
     MODIFIES SQL DATA
 begin
-	insert into restaurant (email, name, address, phone_number, bio, city, profile_url, banner_url, password) values
+	insert into restaurant (email, name, address, phone_number, bio, city, profile_url, banner_url, password, salt) values
 	(restaurant_email_input, restaurant_name_input, restaurant_address_input, restaurant_phone_number_input,
-	restaurant_bio_input, restaurant_city_input, restaurant_profile_url_input, restaurant_banner_url_input, restaurant_password_input);
+	restaurant_bio_input, restaurant_city_input, restaurant_profile_url_input, restaurant_banner_url_input, PASSWORD(concat(restaurant_password_input, restaurant_salt_input)), restaurant_salt_input);
 
 insert into restaurant_session (restaurant_id, token)
 values (last_insert_id(), restaurant_session_token_input);
 
-select rs.restaurant_id, convert(rs.token using utf8)
+select rs.restaurant_id, convert(rs.token using utf8) as token
 from restaurant_session rs 
 where rs.id= last_insert_id(); 
 	commit;
@@ -579,11 +551,11 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `restaurant_login`(restaurant_email_input varchar(100), restaurant_password_input varchar(50),
-restaurant_session_token_input varchar(100))
+restaurant_session_token_input varchar(100), restaurant_salt_input varchar(100))
     MODIFIES SQL DATA
 begin
 	insert into restaurant_session (restaurant_id, token)
-	select r.id, restaurant_session_token_input from restaurant r where email=restaurant_email_input and password=restaurant_password_input;
+	select r.id, restaurant_session_token_input from restaurant r where email=restaurant_email_input and password=PASSWORD(concat(restaurant_password_input, (select salt from restaurant where email=restaurant_email_input)));
 
 select restaurant_id, convert(rs.token using utf8) as token
 from restaurant_session rs 
@@ -595,7 +567,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `test` */;
+/*!50003 DROP PROCEDURE IF EXISTS `restaurant_login_delete` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -605,17 +577,13 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'IGNORE_SPACE,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `test`(menu_item_description_input varchar(255), menu_item_image_url_input varchar(200),
-menu_item_name_input varchar(100), menu_item_price_input int unsigned)
-    MODIFIES SQL DATA
-begin
-	insert into menu_item (desciption, image_url, name, price)
-	values (menu_item_description_input, menu_item_image_url_input, menu_item_name_input, menu_item_price_input);
-	
--- 	insert into restaurant_session (restaurant_id, token)
--- 	values (last_insert_id(), restaurant_session_token_input);
-	
-	commit;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `restaurant_login_delete`(restaurant_session_token_input varchar(100))
+begin
+
+	delete rs from restaurant_session rs where token=restaurant_session_token_input;
+
+select row_count() as restaurant_logout;
+commit;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -632,4 +600,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-31  7:35:22
+-- Dump completed on 2022-11-01 20:18:52

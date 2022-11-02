@@ -30,13 +30,14 @@ def post():
     if(invalid != None):
         return make_response(json.dumps(invalid, default=str), 400)
 
-# generates a random unique id and sets it as the variable token
+# generates a random unique id and sets it as the variable token and salt
     token = uuid4().hex
+    salt = uuid4().hex
 # runs the statment CALL post_restaurant and sends the
-#  'description','image_url','name','price' that's input as an arguement as well as the token and stores it as the variable results
-    results = dbhelper.run_statment('CALL post_restaurant(?,?,?,?,?,?,?,?,?,?)',
+#  'description','image_url','name','price' that's input as an arguement as well as the token/salt and stores it as the variable results
+    results = dbhelper.run_statment('CALL post_restaurant(?,?,?,?,?,?,?,?,?,?,?)',
     [request.json.get('email'), request.json.get('name'), request.json.get('address'), request.json.get('phone_number'),
-    request.json.get('bio'), request.json.get('city'), request.json.get('profile_url'), request.json.get('banner_url'), request.json.get('password'), token])
+    request.json.get('bio'), request.json.get('city'), request.json.get('profile_url'), request.json.get('banner_url'), request.json.get('password'), token, salt])
 # if results is equal to a list it will display a 200 message (success), and print the results of the procedure as json
 # if it isn't it will display a 500 message (server error)
     if(type(results) == list):

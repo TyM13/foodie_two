@@ -12,8 +12,6 @@ import menu.menu
 import restaurant_login.restaurant_login
 
 
-#change conditionals to be correct
-
 app = Flask(__name__)
 
 
@@ -31,33 +29,14 @@ def client_post():
 
 @app.patch('/api/client')
 def client_patch():
-    invalid = check_endpoint_info(request.headers, ['token']) 
-    if(invalid != None):
-        return make_response(json.dumps(invalid, default=str), 400)
+    return client.client.patch()
 
-
-    results = dbhelper.run_statment('CALL get_client_token(?)', [request.headers.get('token')])
-    if(type(results) != list):
-        return make_response(json.dumps(results), 400)
-    
-    results = fill_optional_data(request.json, results[0] ['email', 'first_name', 'last_name','image_url', 'username', 'password'])
-    results = dbhelper.run_statment('CALL patch_client(?,?,?,?,?,?,?)',
-    [request.headers['token'], results['email'], results['first_name'], results['last_name'], results['image_url'], results['username'], results['password']])
-    if(type(results) == list):
-        return make_response(json.dumps(results, default=str), 200)
-    else:
-        return make_response(json.dumps(results, default=str), 500)
 
 
 
 @app.delete('/api/client')
 def client_delete():
     return client.client.delete()
-
-
-
-
-
 
 
 
@@ -70,13 +49,10 @@ def login_client():
     return client_login.client_login.post()
 
 
-
 # client-login Delete 
 @app.delete('/api/client-login')
 def delete_client():
     return client_login.client_login.delete()
-
-
 
 
 #--------------------------------RESTAURANT-LOGIN-------------------------------------------------#
@@ -86,6 +62,9 @@ def delete_client():
 def login_restaurant():
     return restaurant_login.restaurant_login.post()
 
+@app.delete('/api/restaurant-login')
+def restaurant_logout():
+    return restaurant_login.restaurant_login.delete()
 
         
 
@@ -103,6 +82,7 @@ def get_specific_restaurant():
 def restaurant_post():
     return restaurant.restaurant.post()
 
+#need patch and delete
 
 
 #----------------------------------RESTAURANTS-----------------------------------------------#
@@ -128,6 +108,7 @@ def menu_get():
 def menu_post():
     return menu.menu.post()
 
+#need patch and delete
 
 
 
